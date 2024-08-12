@@ -39,7 +39,7 @@ jobs:
         run: docker-compose up -d
 
       - name: Test
-        run: go test -v main_test.go
+        run: go test -v ./...
 
   build:
     needs: test
@@ -59,8 +59,8 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.6
         with:
-            name: programa-${{ github.run_id }}  # Unique name for each run
-            path: main
+          name: programa-${{ github.run_id }}  # Unique name
+          path: main
       
   docker:
     needs: build
