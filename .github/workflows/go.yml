@@ -59,7 +59,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.6
         with:
-          name: programa
+          name: system
           path: main
       
   docker:
