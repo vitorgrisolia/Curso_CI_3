@@ -14,19 +14,10 @@ jobs:
         uses: docker/setup-buildx-action@v3.6.1
 
       - name: Download a Build Artifact
-<<<<<<< HEAD
-        uses: actions/download-artifact@v4.1.8
-        with:
-    # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
-           name: system
-    
-=======
         uses: actions/download-artifact@v3.0.0
         with:
-    # Artifact name
           name: system
 
->>>>>>> 8419844 (Update Docker.yml)
       - name: Docker Login
   # You may pin to the exact commit or the version.
   # uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
