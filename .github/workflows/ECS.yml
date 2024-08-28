@@ -1,0 +1,19 @@
+name: Entrega continua
+
+on:
+  workflow_call:
+
+jobs:
+
+  ECS:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CHAVEDEACESSO }}
+          aws-secret-access-key: ${{ secrets.CHAVEDEACESSOSSECRETA }}
+          aws-region: us-east-2
+        
+      - name: Obtendo arquivo de task
+        run: aws ecs describe-task-definition --task-definition tarefa-api-go --query taskDefinition > task-definition.json
