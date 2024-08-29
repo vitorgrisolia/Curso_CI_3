@@ -39,5 +39,5 @@ jobs:
           # Push is a shorthand for --output=type=registry
               push: true
           # List of tags
-              tags: vitorgrisolia/go_ci:${{github.ref_name}}
+              tags: vitorgrisolia/go_ci:${{github.run_number}}
             
