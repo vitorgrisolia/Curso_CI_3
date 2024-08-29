@@ -1,22 +1,17 @@
 FROM ubuntu:latest
 
-WORKDIR /app
-
 EXPOSE 8000
 
-ENV  HOST=localhost DBPORT=5432
+WORKDIR /app
 
-ENV  USER=root PASSWORD=root DBNAME=root
+ENV HOST=localhost DBPORT=5432
 
-RUN apt-get update && \
-    apt-get install -y \
-    libc6-dev \
-    && rm -rf /var/lib/apt/lists/*
+ENV USER=root PASSWORD=root DBNAME=root
 
-COPY ./main /app/main
+COPY ./main main
 
-RUN chmod +x /app/main
+RUN chmod +x main
 
-COPY ./templates /app/templates
+COPY ./templates/ templates/
 
-CMD [ "/app/main" ]
+CMD [ "./main" ]
