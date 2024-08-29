@@ -1,12 +1,12 @@
-name: Entrega continua
+name: Continuous Deployment
 
 on:
   workflow_call:
 
 jobs:
-
   ECS:
     runs-on: ubuntu-latest
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -14,9 +14,12 @@ jobs:
           aws-access-key-id: ${{ secrets.CHAVEDEACESSO }}
           aws-secret-access-key: ${{ secrets.CHAVEDEACESSOSSECRETA }}
           aws-region: us-east-2
-        
-      - name: Obtendo arquivo de task
+
+      - name: Fetch ECS task definition
         run: aws ecs describe-task-definition --task-definition tarefa-api-go --query taskDefinition > task-definition.json
+
+      - name: Debug Task Definition
+        run: cat task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -26,12 +29,13 @@ jobs:
           container-name: Go
           image: vitorgrisolia/go_ci:main
           environment-variables: |
-             HOST=${{ secrets.DBHOST }}
-             USER=${{ secrets.DBUSER }}
-             PASSWORD=${{ secrets.DBPASSWORD }}
-             DBNAME=${{ secrets.DBNAME }}
-             DBPORT=${{ secrets.DBPORT }}
-             PORT=8000
+            HOST=${{ secrets.DBHOST }}
+            USER=${{ secrets.DBUSER }}
+            PASSWORD=${{ secrets.DBPASSWORD }}
+            DBNAME=${{ secrets.DBNAME }}
+            DBPORT=${{ secrets.DBPORT }}
+            PORT=8000
+
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
