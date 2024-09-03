@@ -18,15 +18,14 @@ jobs:
       - name: Fetch ECS task definition
         run: aws ecs describe-task-definition --task-definition tarefa-api-go:1 --query taskDefinition > task-definition.json
 
-      - name: copia do task-definition
+      - name: Backup current task definition
         run: cp task-definition.json task-definition.json.old
 
       - name: Debug Task Definition
         run: cat task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
-        continue-on-error: true
-        id: task-def
+        id: render-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
@@ -41,9 +40,10 @@ jobs:
             PORT=8000
 
       - name: Deploy Amazon ECS task definition
+        id: deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
           service: Servico_API_GO
           cluster: API-Go-cluster
           wait-for-service-stability: true
@@ -52,7 +52,7 @@ jobs:
         continue-on-error: true
         run: echo "REQUEST=0" >> $GITHUB_ENV; sleep 30s; wget LB-API-Go-288851699.us-east-2.elb.amazonaws.com:8000/vitor || echo "REQUEST=1" >> $GITHUB_ENV 
 
-      - name: Deploy Amazon ECS task definition
+      - name: Rollback Deployment if Needed
         if: ${{ env.REQUEST != 0 }}
         continue-on-error: true
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
