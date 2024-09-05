@@ -19,22 +19,22 @@ jobs:
           aws-region: us-east-2
           
       - name: clone do repositório
-      - run: git clone https://github.com/vitorgrisolia/Infra_CI.git
+        run: git clone https://github.com/vitorgrisolia/Infra_CI.git
       
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         
       - name: criar a infra do terraform
-      - run: terraform -chdir=Infra_CI/env/Homolog init
+        run: terraform -chdir=Infra_CI/env/Homolog init
       
       - name: comando de encerrar
-      - run: terraform -chdir=Infra_CI/env/Homolog destroy -auto-approve
+        run: terraform -chdir=Infra_CI/env/Homolog destroy -auto-approve
 
       - name: Executar a infra do terraform
-      - run: terraform -chdir=Infra_CI/env/Homolog apply -auto-approve
+        run: terraform -chdir=Infra_CI/env/Homolog apply -auto-approve
 
-      -  name: saida do terraform
-      - run: echo "$(terraform -chdir=Infra_CI/env/Homolog output -raw IP_alb)"
+      - name: saida do terraform
+        run: echo "$(terraform -chdir=Infra_CI/env/Homolog output -raw IP_alb)"
         id: URL
 
       - name: Setup Python
@@ -62,3 +62,6 @@ jobs:
       - name: Play Test de carga
             # locust -f $file --headless -u $INPUT_USERS -r $INPUT_RATE --run-time $INPUT_RUNTIME -H $INPUT_URL
         run: sleep 60s; locust -f locustfile.py --headless -u 10 -r 5 --run-time 60s -H http://${{ steps.URL.outputs.stdout }}
+
+      - name: comando de encerrar geral
+        run: terraform -chdir=Infra_CI/env/Homolog destroy -auto-approve
