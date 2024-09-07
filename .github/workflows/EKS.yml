@@ -26,8 +26,8 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog init
 
-      - name: Terraform Plan
-        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
+      # - name: Terraform Plan
+      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
 
       - name: Terraform Apply
         run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog apply -auto-approve
