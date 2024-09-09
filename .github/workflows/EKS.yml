@@ -1,0 +1,38 @@
+name: Kubernetes
+
+on:
+  workflow_call:
+
+jobs:
+  EKS:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CHAVEDEACESSO }}
+          aws-secret-access-key: ${{ secrets.CHAVEDEACESSOSSECRETA }}
+          aws-region: us-east-2
+
+      - name: Clone repository
+        run: git clone https://github.com/vitorgrisolia/Infra_CI_Kubernetes.git
+
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+
+      - name: Terraform Init
+        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog init
+
+      # - name: Terraform Plan
+      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
+
+      - name: Terraform Apply
+        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog apply -auto-approve
+
+      # O passo de destruição geralmente não deve estar aqui. Considere movê-lo para outro workflow ou etapa.
+
+      # - name: Terraform Destroy (se necessário)
+      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog destroy -auto-approve
