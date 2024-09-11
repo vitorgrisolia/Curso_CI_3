@@ -10,11 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: configurando credenciais da AWS
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.CHAVE_ACESSO }}
-        aws-secret-access-key: ${{ secrets.CHAVE_SECRETA }}
+        aws-access-key-id: ${{ secrets.CHAVEDEACESSO }}
+        aws-secret-access-key: ${{ secrets.CHAVEDEACESSOSSECRETA }}
         aws-region: us-east-2
         
         
