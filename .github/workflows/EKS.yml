@@ -36,13 +36,13 @@ jobs:
         uses: Azure/setup-kubectl@v3
         
       - name:  autenticação de cluster
-      - run: aws sts get-caller-identity
+        run: aws sts get-caller-identity
       
       - name: arquivo kubeconfig com a AWS CLI
-      - run: aws eks update-kubeconfig --region us-east-2 --name homolog2
+        run: aws eks update-kubeconfig --region us-east-2 --name homolog2
 
       - name: Teste a configuração.
-      - run: kubectl get svc
+        run: kubectl get svc
 
 
       # O passo de destruição geralmente não deve estar aqui. Considere movê-lo para outro workflow ou etapa.
