@@ -26,11 +26,24 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog init
 
-      - name: Terraform Plan
-        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
+      # - name: Terraform Plan
+      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
 
       - name: Terraform Apply
         run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog apply -auto-approve
+
+      - name: Kubectl tool installer
+        uses: Azure/setup-kubectl@v3
+        
+      - name:  autenticação de cluster
+      - run: aws sts get-caller-identity
+      
+      - name: arquivo kubeconfig com a AWS CLI
+      - run: aws eks update-kubeconfig --region us-east-2 --name homolog2
+
+      - name: Teste a configuração.
+      - run: kubectl get svc
+
 
       # O passo de destruição geralmente não deve estar aqui. Considere movê-lo para outro workflow ou etapa.
 
