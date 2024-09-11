@@ -1,51 +1,37 @@
-name: Kubernetes
+name: kubernetes
 
 on:
   workflow_call:
 
 jobs:
+
   EKS:
     runs-on: ubuntu-latest
     steps:
-
-      - uses: actions/checkout@v3
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.CHAVEDEACESSO }}
-          aws-secret-access-key: ${{ secrets.CHAVEDEACESSOSSECRETA }}
-          aws-region: us-east-2
-
-      - name: Clone repository
-        run: git clone https://github.com/vitorgrisolia/Infra_CI_Kubernetes.git
-
-      - name: HashiCorp - Setup Terraform
-        uses: hashicorp/setup-terraform@v2.0.3
-
-      - name: Terraform Init
-        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog init
-
-      # - name: Terraform Plan
-      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog plan
-
-      - name: Terraform Apply
-        run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog apply -auto-approve
-
-      - name: Kubectl tool installer
-        uses: Azure/setup-kubectl@v3
+    - uses: actions/checkout@v3
+    
+    - name: configurando credenciais da AWS
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ID_CHAVE_ACESSO }}
+        aws-secret-access-key: ${{ secrets.CHAVE_SECRETA }}
+        aws-region: us-east-2
         
-      - name:  autenticação de cluster
-        run: aws sts get-caller-identity
+        
+    - run: git clone https://github.com/leollo98/Infra_CI_Kubernetes.git
+
+    - name: HashiCorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v2.0.3
       
-      - name: arquivo kubeconfig com a AWS CLI
-        run: aws eks update-kubeconfig --region us-east-2 --name homolog2
+    - run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog init
 
-      - name: Teste a configuração.
-        run: kubectl get svc
-
-
-      # O passo de destruição geralmente não deve estar aqui. Considere movê-lo para outro workflow ou etapa.
-
-      # - name: Terraform Destroy (se necessário)
-      #   run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog destroy -auto-approve
+    - run: terraform -chdir=Infra_CI_Kubernetes/env/Homolog apply -auto-approve
+    
+    - name: Kubectl tool installer
+      uses: Azure/setup-kubectl@v3
+      
+    - run: aws sts get-caller-identity
+    
+    - run: aws eks update-kubeconfig --region us-west-2 --name homolog2
+    
+    - run: kubectl get svc
